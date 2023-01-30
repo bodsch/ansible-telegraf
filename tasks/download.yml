@@ -1,0 +1,41 @@
+---
+
+# - name: checksum
+#   become: false
+#   delegate_to: localhost
+#   run_once: true
+#   block:
+#     - name: get checksum list
+#       ansible.builtin.set_fact:
+#         __telegraf_checksums: "{{ lookup('url', telegraf_release_download_url + '/download/' + __telegraf_files.checksum, wantlist=True) | list }}"
+#
+#     - name: get checksum for {{ system_architecture }} architecture
+#       ansible.builtin.set_fact:
+#         __telegraf_checksum: "{{ __telegraf_checksums | telegraf_checksum('linux', system_architecture) }}"
+
+- name: download telegraf binary archive
+  become: false
+  delegate_to: "{{ telegraf_delegate_to }}"
+  run_once: "{{ 'false' if telegraf_direct_download else 'true' }}"
+  ansible.builtin.get_url:
+    url: "{{ telegraf_release_download_url }}/{{ __telegraf_files.archive }}"
+    dest: "{{ telegraf_local_tmp_directory }}/{{ __telegraf_files.archive }}"
+    # checksum: "sha256:{{ __telegraf_checksum }}"
+    mode: 0640
+  register: _download_archive
+  until: _download_archive is succeeded
+  retries: 5
+  delay: 2
+  check_mode: false
+
+- name: extract telegraf archive
+  become: false
+  delegate_to: "{{ telegraf_delegate_to }}"
+  run_once: "{{ 'false' if telegraf_direct_download else 'true' }}"
+  ansible.builtin.unarchive:
+    src: "{{ telegraf_local_tmp_directory }}/{{ __telegraf_files.archive }}"
+    dest: "{{ telegraf_local_tmp_directory }}"
+    copy: false
+  register: _extract_archive
+
+...

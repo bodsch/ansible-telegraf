@@ -1,0 +1,14 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
+# {{ ansible_managed }}
+
+{% include('telegraf.d/10-global_tags.j2') %}
+
+{% include('telegraf.d/15-agent.j2') %}
+
+{% include('telegraf.d/20-inputs.j2') %}
+
+{% include('telegraf.d/20-outputs.j2') %}
+
+{% include('telegraf.d/30-processors.j2') %}
+
+{% include('telegraf.d/30-aggregators.j2') %}

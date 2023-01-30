@@ -1,0 +1,32 @@
+---
+
+galaxy_info:
+  role_name: telegraf
+  namespace: bodsch
+
+  author: Bodo Schulz
+  description: ansible role to setup telegraf
+  license: Apache
+  min_ansible_version: "2.10"
+
+  platforms:
+    - name: ArchLinux
+    - name: Debian
+      versions:
+        # 10
+        - buster
+        # 11
+        - bullseye
+    - name: Ubuntu
+      versions:
+        # 20.04
+        - focal
+
+  galaxy_tags:
+    - influx
+    - telegraf
+    - monitoring
+
+dependencies: []
+
+...

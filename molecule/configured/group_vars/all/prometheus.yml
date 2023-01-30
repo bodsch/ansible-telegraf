@@ -1,0 +1,33 @@
+---
+
+prometheus_service:
+  log:
+    level: info
+  web:
+    listen_address: "0.0.0.0:9090"
+
+prometheus_global:
+  scrape_interval: 5m
+  evaluation_interval: 2m
+  external_labels:
+    environment: MOLECULE
+    production: not
+  query_log_file: ""
+
+prometheus_alerting:
+  telegrafs:
+    - scheme: http
+      timeout: 10s
+      api_version: ""
+      path_prefix: "/"
+      #file_sd_configs:
+      #  - "file_sd_config"
+      static_configs:
+        - targets:
+            - localhost
+            # - remote_1
+            # - remote_2
+          # Labels assigned to all metrics scraped from the targets.
+          labels:
+            can_ignored: true
+...

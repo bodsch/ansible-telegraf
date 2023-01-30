@@ -1,0 +1,99 @@
+---
+
+- name: detect binary file for telegraf
+  become: false
+  delegate_to: "{{ telegraf_delegate_to }}"
+  run_once: "{{ 'false' if telegraf_direct_download else 'true' }}"
+  ansible.builtin.stat:
+    path: "{{ telegraf_local_tmp_directory }}/telegraf-{{ telegraf_version }}/usr/bin/telegraf"
+  register: stat_file_binary
+
+- name: propagate files
+  when:
+    - stat_file_binary.stat.exists
+  block:
+    - name: propagate telegraf binaries
+      ansible.builtin.copy:
+        src: "{{ telegraf_local_tmp_directory }}/telegraf-{{ telegraf_version }}/usr/bin/telegraf"
+        dest: "{{ telegraf_install_path }}/"
+        mode: 0755
+        owner: "{{ telegraf_system_user }}"
+        group: "{{ telegraf_system_group }}"
+        remote_src: "{{ 'true' if telegraf_direct_download else 'false' }}"
+
+- name: create local facts
+  ansible.builtin.template:
+    src: ansible_facts.j2
+    dest: /etc/ansible/facts.d/telegraf.fact
+    mode: 0755
+
+- name: create link to binary
+  ansible.builtin.file:
+    src: "{{ telegraf_install_path }}/telegraf"
+    dest: "/usr/bin/telegraf"
+    state: link
+    force: true
+    follow: false
+  notify:
+    - restart telegraf
+
+- name: systemd
+  when:
+    - ansible_service_mgr | lower == "systemd"
+  block:
+    - name: create telegraf run configuration
+      ansible.builtin.template:
+        src: "telegraf.j2"
+        dest: "{{ telegraf_defaults_directory }}/telegraf"
+        force: true
+        owner: root
+        group: "{{ telegraf_system_group }}"
+        mode: 0640
+
+    - name: create systemd service unit
+      ansible.builtin.template:
+        src: "init/systemd/telegraf.service.j2"
+        dest: "{{ systemd_lib_directory }}/telegraf.service"
+        owner: root
+        group: root
+        mode: 0644
+      notify:
+        - daemon-reload
+
+- name: openrc
+  when:
+    - ansible_service_mgr | lower == "openrc"
+  block:
+    - name: create openrc service configuration
+      ansible.builtin.template:
+        src: "init/openrc/conf.d/telegraf.j2"
+        dest: "/etc/conf.d/telegraf"
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: create openrc init configuration
+      ansible.builtin.template:
+        src: "init/openrc/init.d/telegraf.j2"
+        dest: "/etc/init.d/telegraf"
+        owner: root
+        group: root
+        mode: 0750
+
+- name: create telegraf configuration directory
+  ansible.builtin.file:
+    path: "{{ telegraf_config_dir }}"
+    state: directory
+    owner: root
+    group: "{{ telegraf_system_group }}"
+    mode: 0770
+
+- name: create telegraf configuration sub-directory
+  ansible.builtin.file:
+    path: "{{ telegraf_config_dir }}/telegraf.d"
+    state: directory
+    owner: root
+    group: "{{ telegraf_system_group }}"
+    mode: 0770
+
+...

@@ -1,0 +1,50 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
+# {{ ansible_managed }}
+
+# GOMAXPROCS={{ ansible_processor_vcpus | default(ansible_processor_count) }}
+
+command_args="
+  --config {{ telegraf_service.config.file }} \
+  --config-directory {{ telegraf_service.config.directory }} \
+"
+
+{#
+root@instance:/# telegraf --help
+NAME:
+   Telegraf - The plugin-driven server agent for collecting & reporting metrics.
+
+USAGE:
+   Telegraf [global options] command [command options] [arguments...]
+
+COMMANDS:
+   config   print out full sample configuration to stdout
+   version  print current version to stdout
+   secrets  commands for listing, adding and removing secrets on all known secret-stores
+   help, h  Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --config value [ --config value ]                      configuration file to load
+   --config-directory value [ --config-directory value ]  directory containing additional *.conf files
+   --test-wait value                                      wait up to this many seconds for service inputs to complete in test mode (default: 0)
+   --usage value                                          print usage for a plugin, ie, 'telegraf --usage mysql'
+   --pprof-addr value                                     pprof host/IP and port to listen on (e.g. 'localhost:6060')
+   --watch-config value                                   monitoring config changes [notify, poll]
+   --pidfile value                                        file to write our pid to
+   --once                                                 run one gather and exit (default: false)
+   --debug                                                turn on debug logging (default: false)
+   --quiet                                                run in quiet mode (default: false)
+   --test                                                 enable test mode: gather metrics, print them out, and exit. Note: Test mode only runs inputs, not processors, aggregators, or outputs (default: false)
+   --deprecation-list                                     print all deprecated plugins or plugin options (default: false)
+   --input-list                                           print available input plugins (default: false)
+   --output-list                                          print available output plugins (default: false)
+   --version                                              DEPRECATED: display the version and exit (default: false)
+   --sample-config                                        DEPRECATED: print out full sample configuration (default: false)
+   --plugin-directory value                               DEPRECATED: path to directory containing external plugins
+   --section-filter value                                 filter the sections to print, separator is ':'. Valid values are 'agent', 'global_tags', 'outputs', 'processors', 'aggregators' and 'inputs'
+   --input-filter value                                   filter the inputs to enable, separator is ':'
+   --output-filter value                                  filter the outputs to enable, separator is ':'
+   --aggregator-filter value                              filter the aggregators to enable, separator is ':'
+   --processor-filter value                               filter the processors to enable, separator is ':'
+   --secretstore-filter value                             filter the secret-stores to enable, separator is ':'
+   --help, -h                                             show help (default: false)
+#}

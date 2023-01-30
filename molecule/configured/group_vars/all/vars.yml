@@ -1,0 +1,77 @@
+---
+
+telegraf_service: {}
+
+telegraf_config_agent: {}
+
+telegraf_config_outputs:
+  - type: influxdb_v2
+    config:
+      urls:
+        - "http://influx2:8086"
+
+  - type: influxdb
+    config:
+      urls:
+        - "http://influx1:8089"
+
+  # - type: http
+  #   config:
+  #     url: "http://influx2:8086/telegraf"
+  #     # cookie_auth_headers: '{"Content-Type": "application/json", "X-MY-HEADER":"hello"}'
+  #     max_idle_conn: 0
+  #   filter:
+  #     name: headers
+  #     config:
+  #       Content-Type: "text/plain; charset=utf-8"
+
+telegraf_config_inputs:
+  - plugin: cpu
+    config:
+      percpu: "true"
+      totalcpu: true
+    tags:
+      foo: bar
+      bar: foo
+    tagdrop:
+      bar:
+        - foo
+
+#   - plugin: disk
+#     config:
+#       mount_points:
+#         - "/"
+#       ignore_fs: ["tmpfs", "devtmpfs", "devfs", "iso9660", "overlay", "aufs", "squashfs"]
+#       ignore_mount_opts: []
+#   - plugin: io
+#   - plugin: mem
+#   - plugin: net
+#   - plugin: system
+#   - plugin: swap
+#   - plugin: netstat
+#   - plugin: processes
+#   - plugin: kernel
+#   - plugin: cgroup
+#     config:
+#       paths:
+#         - "/sys/fs/cgroup/memory"
+#         - "/sys/fs/cgroup/memory/child1"
+#         - "/sys/fs/cgroup/memory/child2/*"
+#       files: ["memory.*usage*", "memory.limit_in_bytes"]
+
+telegraf_config_processors:
+  - processor: rename
+  - processor: rename.replace
+    config:
+      tag: "level"
+      dest: "LogLevel"
+
+telegraf_config_aggregators:
+  - aggregator: basicstats
+    config:
+      drop_original: false
+      stats: ['mean']
+    tagpass:
+      cpu: ["cpu-total"]
+
+...

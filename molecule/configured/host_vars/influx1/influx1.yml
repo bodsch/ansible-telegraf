@@ -1,0 +1,13 @@
+---
+
+influxdb_config_global:
+  reporting-disabled: false
+  bind-address: 0.0.0.0:8088
+
+influxdb_config_http:
+  enabled: true
+  https-enabled: false
+  bind-address: 0.0.0.0:8086
+  auth-enabled: false
+
+...

@@ -1,0 +1,51 @@
+---
+
+- name: handle logfile
+  when:
+    - telegraf_config_agent.logtarget is defined
+    - telegraf_config_agent.logtarget == "file"
+    - telegraf_config_agent.logfile is defined
+    - telegraf_config_agent.logfile | string | length > 0
+  block:
+    - name: detect logfile
+      ansible.builtin.stat:
+        path: "{{ telegraf_config_agent.logfile }}"
+        get_checksum: false
+        get_md5: false
+        get_mime: false
+        get_attributes: true
+      register: telegraf_logfile
+
+    - name: create logfile or fix ownership
+      ansible.builtin.file:
+        state: touch
+        path: "{{ telegraf_config_agent.logfile }}"
+        mode: 0660
+        group: "{{ telegraf_system_group }}"
+      when:
+        - not telegraf_logfile.stat.exists or
+          (
+            telegraf_logfile.stat.gr_name is defined and
+            telegraf_logfile.stat.gr_name != telegraf_system_group
+          ) or
+          (
+            telegraf_logfile.stat.mode is defined and
+            telegraf_logfile.stat.mode != '0660'
+          )
+
+- name: create telegraf.conf
+  ansible.builtin.template:
+    force: true
+    src: telegraf/telegraf.conf.j2
+    dest: "{{ telegraf_config_dir }}/telegraf.conf"
+    owner: root
+    group: "{{ telegraf_system_group }}"
+    mode: 0640
+  notify:
+    - validate config
+    - reload telegraf
+
+- name: force restart service after reread config
+  ansible.builtin.meta: flush_handlers
+
+...

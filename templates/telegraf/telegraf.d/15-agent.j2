@@ -1,0 +1,43 @@
+
+## -----------------------------------------------------------------
+
+[agent]
+  interval = "{{ telegraf_config_agent.interval }}"
+  round_interval = {{ telegraf_config_agent.round_interval | bool | ternary('true', 'false') }}
+  metric_batch_size = {{ telegraf_config_agent.metric_batch_size }}
+  metric_buffer_limit = {{ telegraf_config_agent.metric_buffer_limit }}
+  collection_jitter = "{{ telegraf_config_agent.collection_jitter }}"
+  # collection_offset = "{{ telegraf_config_agent.collection_offset }}"
+  flush_interval = "{{ telegraf_config_agent.flush_interval }}"
+  flush_jitter = "{{ telegraf_config_agent.flush_jitter }}"
+  precision = "{{ telegraf_config_agent.precision }}"
+  debug = {{ telegraf_config_agent.debug | bool | ternary('true', 'false') }}
+  quiet = {{ telegraf_config_agent.quiet | bool | ternary('true', 'false') }}
+  {% if telegraf_config_agent.logtarget is defined and
+        telegraf_config_agent.logtarget in ["file", "stderr", "eventlog"] %}
+  logtarget = "{{ telegraf_config_agent.logtarget }}"
+    {% if telegraf_config_agent.logtarget == "file" %}
+  logfile = "{{ telegraf_config_agent.logfile }}"
+    {% endif %}
+    {% if telegraf_config_agent.logfile_rotation_interval is defined and
+          telegraf_config_agent.logfile_rotation_interval | string | length > 0 %}
+  logfile_rotation_interval = "{{ telegraf_config_agent.logfile_rotation_interval }}"
+    {% endif %}
+    {% if telegraf_config_agent.logfile_rotation_max_size is defined and
+          telegraf_config_agent.logfile_rotation_max_size | string | length > 0 %}
+  logfile_rotation_max_size = "{{ telegraf_config_agent.logfile_rotation_max_size }}"
+    {% endif %}
+    {% if telegraf_config_agent.logfile_rotation_max_archives is defined and
+          telegraf_config_agent.logfile_rotation_max_archives | string | length > 0 %}
+  logfile_rotation_max_archives = {{ telegraf_config_agent.logfile_rotation_max_archives }}
+    {% endif %}
+    {% if telegraf_config_agent.log_with_timezone is defined and
+          telegraf_config_agent.log_with_timezone | string | length > 0 %}
+  log_with_timezone = "{{ telegraf_config_agent.log_with_timezone }}"
+    {% endif %}
+  {% endif %}
+  hostname = "{{ telegraf_config_agent.hostname }}"
+  omit_hostname = {{ telegraf_config_agent.omit_hostname | bool | ternary('true', 'false') }}
+  # snmp_translator = "{{ telegraf_config_agent.snmp_translator }}"
+
+## -----------------------------------------------------------------

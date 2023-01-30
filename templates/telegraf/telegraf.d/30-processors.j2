@@ -1,0 +1,33 @@
+
+{% if telegraf_config_processors is defined and
+      telegraf_config_processors is iterable %}
+
+## -----------------------------------------------------------------
+  {% for item in telegraf_config_processors %}
+[[processors.{{ item.processor }}]]
+    {% if item.config is defined and
+          item.config is iterable %}
+      {% for k, v in item.config.items() %}
+        {% set result, value = v | telegraf_input_value %}
+  {{ k }} = {{ value }}
+      {% endfor %}
+    {% endif %}
+    {% if item.tagpass is defined and
+          item.tagpass is iterable %}
+  [processors.{{ item.processor }}.tagpass]
+      {% for k, v in item.tagpass.items() %}
+        {% set result, value = v | telegraf_input_value %}
+  {{ k }} = {{ value }}
+      {% endfor %}
+    {% endif %}
+    {% if item.tagdrop is defined and item.tagdrop is iterable %}
+  [processors.{{ item.processor }}.tagdrop]
+      {% for k, v in item.tagdrop.items() %}
+        {% set result, value = v | telegraf_input_value %}
+  {{ k }} = {{ value }}
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+
+## -----------------------------------------------------------------
+{% endif %}

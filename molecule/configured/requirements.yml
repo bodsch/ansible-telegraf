@@ -1,0 +1,11 @@
+---
+
+- name: influx2
+  src: bodsch.influxdb
+  version: 1.0.2
+
+- name: influx1
+  src: https://github.com/mkayontour/ansible-influxdb.git
+  scm: git
+
+...

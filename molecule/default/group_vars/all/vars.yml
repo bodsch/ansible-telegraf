@@ -1,0 +1,8 @@
+---
+
+telegraf_config_outputs:
+  - type: health
+    config:
+      service_address: "unix:///var/run/telegraf-health.sock"
+
+...

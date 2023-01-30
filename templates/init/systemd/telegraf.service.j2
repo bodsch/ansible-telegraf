@@ -1,0 +1,26 @@
+{{ ansible_managed | comment }}
+
+[Unit]
+Description      = Telegraf is an agent for collecting, processing, aggregating, and writing metrics.
+Documentation    = https://github.com/influxdata/telegraf
+After            = network-online.target
+Wants            = network-online.target
+
+[Service]
+Type             = notify
+EnvironmentFile  = {{ telegraf_defaults_directory }}/telegraf
+
+User             = {{ telegraf_system_user }}
+Group            = {{ telegraf_system_group }}
+
+ExecReload       = /bin/kill -HUP $MAINPID
+ExecStartPre     = /usr/bin/telegraf --debug --test --config {{ telegraf_service.config.file }}
+ExecStart        = /usr/bin/telegraf $OPTIONS
+
+SyslogIdentifier = telegraf
+Restart          = always
+RestartForceExitStatus = SIGPIPE
+KillMode         = control-group
+
+[Install]
+WantedBy         = multi-user.target

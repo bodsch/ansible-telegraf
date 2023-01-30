@@ -1,0 +1,24 @@
+---
+
+telegraf_version: 1.25.0
+
+telegraf_release_download_url: https://dl.influxdata.com/telegraf/releases
+
+telegraf_system_user: telegraf
+telegraf_system_group: telegraf
+telegraf_config_dir: /etc/telegraf
+telegraf_data_dir: /var/lib/telegraf
+
+telegraf_enable_experimental: false
+
+telegraf_direct_download: false
+
+telegraf_service: {}
+
+telegraf_config_agent: {}
+telegraf_config_outputs: []
+telegraf_config_inputs: []
+telegraf_config_processors: []
+telegraf_config_aggregators: []
+
+...

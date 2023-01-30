@@ -1,0 +1,10 @@
+---
+
+- name: ensure telegraf is enabled on boot
+  become: true
+  ansible.builtin.service:
+    name: telegraf
+    enabled: true
+    state: started
+
+...

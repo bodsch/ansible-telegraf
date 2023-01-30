@@ -1,0 +1,6 @@
+---
+
+telegraf_requirements:
+  - iproute
+
+...

@@ -1,0 +1,77 @@
+#!/usr/bin/openrc-run
+
+# Copyright 2016-2018 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+
+description="Telegraf is an agent for collecting, processing, aggregating, and writing metrics."
+pidfile=${pidfile:-"/run/${RC_SVCNAME}.pid"}
+user=${user:-${SVCNAME}}
+group=${group:-${SVCNAME}}
+
+command="/usr/bin/telegraf"
+command_args="${command_args:--config.file={{ telegraf_service.config.file }} --config-directory {{ telegraf_service.config.directory }}"
+command_user="${user}:${group}"
+output_log="/var/log/${RC_SVCNAME}.log"
+error_log="${output_log}"
+extra_started_commands="reload"
+
+depend() {
+  after net
+}
+
+configtest() {
+  ebegin "Checking telegraf' configuration"
+
+  /usr/bin/telegraf \
+    --debug \
+    --test
+    --config {{ telegraf_service.config.file }}
+
+  if [ $? -gt 0 ]; then
+    eend $? "failed, please correct errors above"
+  fi
+}
+
+start_pre() {
+  if [ "${RC_CMD}" != "restart" ]; then
+          configtest || return 1
+  fi
+}
+
+stop_pre() {
+  if [ "${RC_CMD}" = "restart" ]; then
+    configtest || return 1
+  fi
+}
+
+start() {
+  ebegin "Starting ${SVCNAME}"
+
+  start-stop-daemon --start \
+    --background \
+    --exec "${command}" \
+    --stdout ${output_log} \
+    --stderr ${error_log} \
+    --pidfile ${pidfile} \
+    --user ${command_user} \
+    -- ${command_args}
+
+  pidof telegraf > "${pidfile}"
+
+  eend $? "Failed to start ${SVCNAME}"
+}
+
+stop() {
+  ebegin "Stopping ${SVCNAME}"
+  start-stop-daemon --stop \
+    --pidfile "${pidfile}"
+
+  eend $? "Failed to stop ${SVCNAME}"
+}
+
+
+reload() {
+  ebegin "Reloading ${SVCNAME}"
+  kill -s HUP $(cat "${pidfile}") 2> /dev/null
+  eend $?
+}
