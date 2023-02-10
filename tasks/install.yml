@@ -49,6 +49,8 @@
         owner: root
         group: "{{ telegraf_system_group }}"
         mode: 0640
+      notify:
+        - restart telegraf
 
     - name: create systemd service unit
       ansible.builtin.template:
@@ -71,6 +73,8 @@
         owner: root
         group: root
         mode: 0644
+      notify:
+        - restart telegraf
 
     - name: create openrc init configuration
       ansible.builtin.template:
@@ -79,6 +83,8 @@
         owner: root
         group: root
         mode: 0750
+      notify:
+        - restart telegraf
 
 - name: create telegraf configuration directory
   ansible.builtin.file:

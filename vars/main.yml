@@ -18,15 +18,12 @@ telegraf_defaults_service:
   config:
     file: "{{ telegraf_config_dir }}/telegraf.conf"
     directory: "{{ telegraf_config_dir }}/telegraf.d"
-  test_wait: 0
   pprof_addr: ""    # e.g. 'localhost:6060'
-  watch_config: ""  # notify, poll
+  watch_config: "notify"  # notify, poll
   pidfile: ""
   once: false
   debug: false
   quiet: false
-  test: false
-
   raw_flags: {}
 
 telegraf_defaults_config_agent:

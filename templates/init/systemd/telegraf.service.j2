@@ -7,14 +7,14 @@ After            = network-online.target
 Wants            = network-online.target
 
 [Service]
-Type             = notify
+Type             = simple
 EnvironmentFile  = {{ telegraf_defaults_directory }}/telegraf
 
-User             = {{ telegraf_system_user }}
+# User             = {{ telegraf_system_user }}
 Group            = {{ telegraf_system_group }}
 
 ExecReload       = /bin/kill -HUP $MAINPID
-ExecStartPre     = /usr/bin/telegraf --debug --test --config {{ telegraf_service.config.file }}
+ExecStartPre     = /usr/bin/telegraf --debug --test $OPTIONS
 ExecStart        = /usr/bin/telegraf $OPTIONS
 
 SyslogIdentifier = telegraf

@@ -4,6 +4,31 @@
 # GOMAXPROCS={{ ansible_processor_vcpus | default(ansible_processor_count) }}
 
 OPTIONS="
+{% if telegraf_service.pprof_addr is defined and
+      telegraf_service.pprof_addr | string | length > 0 %}
+  --pprof-addr {{ telegraf_service.pprof_addr }} \
+{% endif %}
+{% if telegraf_service.watch_config is defined and
+      telegraf_service.watch_config | string | length > 0 and
+      telegraf_service.watch_config in ["notify", "poll"] %}
+  --watch-config {{ telegraf_service.watch_config }} \
+{% endif %}
+{% if telegraf_service.pidfile is defined and
+      telegraf_service.pidfile | string | length > 0 %}
+  --pidfile {{ telegraf_service.pidfile }} \
+{% endif %}
+{% if telegraf_service.once is defined and
+      telegraf_service.once %}
+  --once \
+{% endif %}
+{% if telegraf_service.debug is defined and
+      telegraf_service.debug %}
+  --debug \
+{% endif %}
+{% if telegraf_service.quiet is defined and
+      telegraf_service.quiet %}
+  --quiet \
+{% endif %}
   --config {{ telegraf_service.config.file }} \
   --config-directory {{ telegraf_service.config.directory }} \
 "
