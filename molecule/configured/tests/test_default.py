@@ -93,10 +93,6 @@ def get_vars(host):
 
     # print(pp_json(ansible_vars))
 
-    # remove go-templates with '!unsafe'
-    #
-    _ = ansible_vars.pop("telegraf_receivers")
-
     templar = Templar(loader=DataLoader(), variables=ansible_vars)
     result = templar.template(ansible_vars, fail_on_undefined=False)
 
@@ -112,7 +108,7 @@ def local_facts(host):
 
 @pytest.mark.parametrize("dirs", [
     "/etc/telegraf",
-    "/etc/amtool"
+    "/etc/telegraf/telegraf.d",
 ])
 def test_directories(host, dirs):
     d = host.file(dirs)
@@ -145,38 +141,7 @@ def test_telegraf_files(host, get_vars):
     if defaults_dir and not distribution == "artix":
         files.append(f"{defaults_dir}/telegraf")
     if config_dir:
-        files.append(f"{config_dir}/telegraf.yml")
-
-    print(files)
-
-    for _file in files:
-        f = host.file(_file)
-        assert f.is_file
-
-
-def test_amtool_files(host, get_vars):
-    """
-    """
-    distribution = host.system_info.distribution
-    release = host.system_info.release
-
-    print(f"distribution: {distribution}")
-    print(f"release     : {release}")
-
-    version = local_facts(host).get("version")
-    install_dir = get_vars.get("telegraf_install_path")
-    config_dir = get_vars.get("telegraf_amtool", {}).get("config_dir", None)
-
-    if 'latest' in install_dir:
-        install_dir = install_dir.replace('latest', version)
-
-    files = []
-    files.append("/usr/bin/amtool")
-
-    if install_dir:
-        files.append(f"{install_dir}/amtool")
-    if config_dir:
-        files.append(f"{config_dir}/config.yml")
+        files.append(f"{config_dir}/telegraf.conf")
 
     print(files)
 
@@ -201,22 +166,3 @@ def test_service(host, get_vars):
     service = host.service("telegraf")
     assert service.is_enabled
     assert service.is_running
-
-
-def test_open_port(host, get_vars):
-    for i in host.socket.get_listening_sockets():
-        print(i)
-
-    telegraf_service = get_vars.get("telegraf_service", {})
-
-    print(telegraf_service)
-
-    if isinstance(telegraf_service, dict):
-        telegraf_web = telegraf_service.get("web", {})
-
-        listen_address = telegraf_web.get("listen_address")
-    else:
-        listen_address = "0.0.0.0:9093"
-
-    service = host.socket(f"tcp://{listen_address}")
-    assert service.is_listening
