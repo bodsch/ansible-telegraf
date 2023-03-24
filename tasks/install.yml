@@ -1,6 +1,6 @@
 ---
 
-- name: detect binary file for telegraf
+- name: detect binary file for telegraf on {{ telegraf_delegate_to }}
   become: false
   delegate_to: "{{ telegraf_delegate_to }}"
   run_once: "{{ 'false' if telegraf_direct_download else 'true' }}"

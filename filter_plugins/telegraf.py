@@ -25,7 +25,7 @@ class FilterModule(object):
     def checksum(self, data, os, arch):
         """
         """
-        display.v(f"checksum(self, data, {os}, {arch})")
+        # display.v(f"checksum(self, data, {os}, {arch})")
 
         checksum = None
 
@@ -36,14 +36,14 @@ class FilterModule(object):
         if isinstance(checksum, str):
             checksum = checksum.split(" ")[0]
 
-        display.v(f"= checksum: {checksum}")
+        # display.v(f"= checksum: {checksum}")
 
         return checksum
 
     def input_value(self, var):
         """
         """
-        display.v(f"input_value(self, {var} ({type(var)}))")
+        # display.v(f"input_value(self, {var} ({type(var)}))")
 
         result = False
         result_value = var
@@ -68,7 +68,7 @@ class FilterModule(object):
             result_value = f'["{_list}"]'
             result = True
 
-        display.v(f"= result: {result}, {result_value}")
+        # display.v(f"= result: {result}, {result_value}")
 
         return result, result_value
 
@@ -79,15 +79,15 @@ class FilterModule(object):
 
         if isinstance(data, list) and len(data) > 0:
             for e in data:
-                _type = e.get('type')
+                # _type = e.get('type')
                 _config = e.get('config', None)
 
                 if not _config:
-                    display.v(f"{_type} has no config .. skip")
+                    # display.v(f"{_type} has no config .. skip")
                     continue
                 else:
                     result.append(e)
 
-        display.v(f"= result: {result}")
+        # display.v(f"= result: {result}")
 
         return result
