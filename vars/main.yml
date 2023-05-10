@@ -235,10 +235,12 @@ telegraf_defaults_config_aggregators: []
 telegraf_defaults_directory: /etc/default
 
 __telegraf_files:
-  # # https://dl.influxdata.com/telegraf/releases/telegraf-1.25.0_static_linux_amd64.tar.gz
-  archive: "telegraf-{{ telegraf_version }}_static_{{ ansible_system | lower }}_{{ system_architecture }}.tar.gz"
+  # https://dl.influxdata.com/telegraf/releases/telegraf-1.25.0_static_linux_amd64.tar.gz
+  # https://dl.influxdata.com/telegraf/releases/telegraf-1.25.3_linux_amd64.tar.gz
+  # https://dl.influxdata.com/telegraf/releases/telegraf-1.26.2_linux_amd64.tar.gz
+  archive: "telegraf-{{ telegraf_version }}_{{ ansible_system | lower }}_{{ system_architecture }}.tar.gz"
   checksum: ""
-  binary: "telegraf-{{ telegraf_version }}_static_{{ ansible_system | lower }}_{{ system_architecture }}.tar.gz"
+  binary: "telegraf-{{ telegraf_version }}_{{ ansible_system | lower }}_{{ system_architecture }}.tar.gz"
 
 go_arch_map:
   x86_64: 'amd64'

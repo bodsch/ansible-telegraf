@@ -21,11 +21,11 @@
         group: "{{ telegraf_system_group }}"
         remote_src: "{{ 'true' if telegraf_direct_download else 'false' }}"
 
-- name: create local facts
-  ansible.builtin.template:
-    src: ansible_facts.j2
-    dest: /etc/ansible/facts.d/telegraf.fact
-    mode: 0755
+- name: create custom fact file
+  bodsch.core.facts:
+    name: telegraf
+    facts:
+      version: "{{ telegraf_version }}"
 
 - name: create link to binary
   ansible.builtin.file:

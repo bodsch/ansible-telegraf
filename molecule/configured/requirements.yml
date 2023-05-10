@@ -2,7 +2,7 @@
 
 - name: influx2
   src: bodsch.influxdb
-  version: 1.0.2
+  version: 1.2.0
 
 - name: influx1
   src: https://github.com/mkayontour/ansible-influxdb.git
