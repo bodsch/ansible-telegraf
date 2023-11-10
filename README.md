@@ -38,14 +38,14 @@ However, this must be explicitly activated by setting `telegraf_direct_download`
 
 Tested on
 
-* ArchLinux
+* Arch Linux
+* Artix Linux
 * Debian based
-    - Debian 10 / 11
-    - Ubuntu 20.04
-* RedHat based
-    - Alma Linux 8
-    - Rocky Linux 8
-    - OracleLinux 8
+    - Debian 10 / 11 / 12
+    - Ubuntu 20.10 / 22.04
+
+> **RedHat-based systems are no longer officially supported! May work, but does not have to.**
+
 
 ## Contribution
 
