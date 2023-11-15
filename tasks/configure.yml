@@ -11,7 +11,7 @@
       ansible.builtin.stat:
         path: "{{ telegraf_config_agent.logfile }}"
         get_checksum: false
-        get_md5: false
+        get_checksum: false
         get_mime: false
         get_attributes: true
       register: telegraf_logfile
