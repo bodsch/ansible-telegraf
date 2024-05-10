@@ -19,6 +19,7 @@ ExecStart        = /usr/bin/telegraf $OPTIONS
 
 SyslogIdentifier = telegraf
 Restart          = always
+RestartSec       = 3s
 RestartForceExitStatus = SIGPIPE
 KillMode         = control-group
 
