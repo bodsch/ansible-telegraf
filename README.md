@@ -13,12 +13,12 @@ Ansible role to install and configure [telegraf](https://www.influxdata.com/time
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bodsch/ansible-telegraf/main.yml?branch=main)][ci]
 [![GitHub issues](https://img.shields.io/github/issues/bodsch/ansible-telegraf)][issues]
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/bodsch/ansible-telegraf)][releases]
-[![Ansible Quality Score](https://img.shields.io/ansible/quality/50067?label=role%20quality)][quality]
+[![Ansible Downloads](https://img.shields.io/ansible/role/d/bodsch/telegraf?logo=ansible)][galaxy]
 
 [ci]: https://github.com/bodsch/ansible-telegraf/actions
 [issues]: https://github.com/bodsch/ansible-telegraf/issues?q=is%3Aopen+is%3Aissue
 [releases]: https://github.com/bodsch/ansible-telegraf/releases
-[quality]: https://galaxy.ansible.com/bodsch/telegraf
+[galaxy]: https://galaxy.ansible.com/ui/standalone/roles/bodsch/telegraf/
 
 
 If `latest` is set for `telegraf_version`, the role tries to install the latest release version.  

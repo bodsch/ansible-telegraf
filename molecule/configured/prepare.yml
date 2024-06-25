@@ -13,6 +13,9 @@
         - name: update pacman system
           ansible.builtin.command: |
             pacman --refresh --sync --sysupgrade --noconfirm
+          register: pacman
+          changed_when: pacman.rc != 0
+          failed_when: pacman.rc != 0
 
         - name: create depends service
           ansible.builtin.copy:
@@ -43,17 +46,17 @@
 
   pre_tasks:
     - name: package update
-      shell:
+      ansible.builtin.shell:
         apt -y update && apt -y upgrade
 
     - name:
-      shell:
+      ansible.builtin.shell:
         cd /tmp/ ;
         curl https://repos.influxdata.com/influxdata-archive_compat.key > /tmp/influxdata-archive_compat.key &&
         echo '393e8779c89ac8d958f81f942f9ad7fb82a25e133faddaf92e15b16e6ac9ce4c /tmp/influxdata-archive_compat.key' | sha256sum -c && cat /tmp/influxdata-archive_compat.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg
 
     - name: install pip
-      package:
+      ansible.builtin.package:
         name: python3-pip
         state: present
       when:

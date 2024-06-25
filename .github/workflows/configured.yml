@@ -25,7 +25,7 @@ jobs:
         image:
           - debian:12
         python_version:
-          - "3.11.3"
+          - "3.11"
         ansible-version:
           - '6.7'
         scenario:
@@ -33,13 +33,13 @@ jobs:
 
     steps:
       - name: check out the codebase.
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: 'ansible-telegraf'
           ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: 🐍 set up python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "${{ matrix.python_version }}"
 
@@ -47,6 +47,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r test-requirements.txt
+
+      - name: force reinstall of community.docker
+        run: |
+          mkdir -p /home/runner/.ansible/collections
+          ansible-galaxy collection install community.docker --force
 
       - name: test with tox
         run: |
