@@ -9,6 +9,11 @@ Ansible role to install and configure [telegraf](https://www.influxdata.com/time
 > Telegraf is written in Go and compiles into a single binary with no external dependencies, and requires a very 
 > minimal memory footprint.
 
+---
+
+> I have moved this role to a [collection](https://github.com/bodsch/ansible-collection-influx), and will therefore no longer be handling any issues or merge requests here.  
+
+---
 
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bodsch/ansible-telegraf/main.yml?branch=main)][ci]
 [![GitHub issues](https://img.shields.io/github/issues/bodsch/ansible-telegraf)][issues]
